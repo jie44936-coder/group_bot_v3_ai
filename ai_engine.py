@@ -5,28 +5,25 @@ def analyze_message(text: str):
     if not text:
         return {"risk": 0, "type": "safe"}
 
-    risk = 0
     t = text.lower()
+    risk = 0
 
-    # 🚨 广告/推广
+    # 🚨 链接检测
     if re.search(r"http|t\.me|www", t):
         risk += 50
 
-    promo_words = ["赚钱", "兼职", "代理", "私聊", "进群", "福利", "点击"]
+    # 🚨 推广关键词
+    promo_words = ["赚钱", "兼职", "代理", "私聊", "福利", "进群", "点击"]
     if any(w in t for w in promo_words):
         risk += 30
 
-    # 🚨 刷屏/垃圾
+    # 🚨 垃圾消息
     if len(t) <= 2:
-        risk += 15
+        risk += 10
 
-    # 🚨 复杂规则
-    if any(c.isdigit() for c in t) and len(t) < 6:
-        risk += 20
-
-    # ======================
-    # AI判定
-    # ======================
+    # ===================
+    # AI判断逻辑
+    # ===================
     if risk >= 70:
         return {"risk": risk, "type": "ban"}
     elif risk >= 40:
